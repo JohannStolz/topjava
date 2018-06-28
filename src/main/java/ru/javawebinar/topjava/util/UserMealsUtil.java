@@ -6,8 +6,8 @@ import ru.javawebinar.topjava.model.UserMealWithExceed;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 public class UserMealsUtil {
     public static void main(String[] args) {
@@ -25,7 +25,21 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        System.out.println("list");
-        return null;
+
+                       
+        Map<LocalDateTime, Integer> totalFatPerDay = new HashMap<>();
+        mealList.forEach(userMeal -> totalFatPerDay.merge(userMeal.getDateTime().truncatedTo(ChronoUnit.DAYS), userMeal.getCalories(), (a, b) -> a + b));
+
+        totalFatPerDay.entrySet().forEach(System.out::println);
+
+        List<UserMealWithExceed> userMealWithExceeds = new ArrayList<>();
+        mealList.forEach(userMeal -> {
+            if (TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime)) {
+                boolean exceed = totalFatPerDay.get(userMeal.getDateTime().truncatedTo(ChronoUnit.DAYS)) > caloriesPerDay;
+                userMealWithExceeds.add(new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), exceed));
+            }
+        });
+        userMealWithExceeds.forEach(System.out::println);
+        return userMealWithExceeds;
     }
 }
