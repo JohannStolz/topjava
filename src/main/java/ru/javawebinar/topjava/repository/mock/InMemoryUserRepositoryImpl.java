@@ -36,7 +36,10 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     @Override
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
-        return repository.values().stream().filter((entity)-> entity.getEmail().equals(email)).findFirst().orElse(null);
+        return repository
+                .values()
+                .stream()
+                .filter((entity) -> entity.getEmail().equals(email)).findFirst().orElse(null);
     }
 
     @Override
@@ -61,5 +64,5 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
             return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
         }
 
-           }
+    }
 }
