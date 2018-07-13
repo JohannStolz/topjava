@@ -49,5 +49,35 @@
         </c:forEach>
     </table>
 </section>
+<h2>Filter for meal by day and time</h2>
+
+<form method="post" action="meals">
+    <input type="hidden" name="action" value="filter">
+
+    <div>
+        <label> Start day </label>
+        <input type="date" name="startDay"/>
+    </div>
+    <div>
+        <label> End day </label>
+        <input type="date" name="endDay"/>
+    </div>
+    </span>
+    <br>
+
+    <div>
+        <label> Start time </label>
+        <input type="time" name="startTime"/>
+    </div>
+    <div>
+        <label> End time </label>
+        <input type="time" name="endTime"/>
+    </div>
+
+    <br>
+
+    <input type="submit" value="Filter meal"/>
+</form>
+
 </body>
 </html>
