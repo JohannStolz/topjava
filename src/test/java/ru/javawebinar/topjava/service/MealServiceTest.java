@@ -17,7 +17,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.javawebinar.topjava.MealTestData.assertMatchListInAnyOrder;
+
 
 /**
  * Created by Johann Stolz 18.07.2018
@@ -44,7 +44,7 @@ public class MealServiceTest {
     public void getAll() throws Exception {
         List<Meal> all = service.getAll(userId);
         List<Meal> allData = MealTestData.getAllData(userId);
-        assertMatchListInAnyOrder(all, allData);
+        assertThat(all.containsAll(allData));
     }
 
     @Test
@@ -70,8 +70,8 @@ public class MealServiceTest {
     public void updateForeign() throws Exception {
         Meal meal = service.get(expectedMealForAdmin.getId(), adminId);
         meal.setDescription("NewForeignTestMeal");
-        Meal update = service.update(meal, userId);
-        assertThat(update).isEqualTo(meal);
+        Meal updateMeal = service.update(meal, userId);
+        assertThat(updateMeal).isEqualTo(meal);
     }
 
     @Test
@@ -102,8 +102,15 @@ public class MealServiceTest {
         LocalDateTime endTime = LocalDateTime.of(LocalDate.of(2018, 5, 31), LocalTime.MAX);
         List<Meal> betweenDateTime = service.getBetweenDateTimes(startTime, endTime, userId);
         List<Meal> between = MealTestData.getBetween(startTime, endTime, userId);
-        assertMatchListInAnyOrder(betweenDateTime, between);
+        assertThat(betweenDateTime.containsAll(between));
     }
+
+    @Test(expected = NotFoundException.class)
+    public void notFoundDelete() throws Exception {
+        service.delete(1, 1);
+            }
+
+
 
 
 }

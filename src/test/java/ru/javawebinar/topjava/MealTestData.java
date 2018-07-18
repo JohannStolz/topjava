@@ -26,12 +26,7 @@ public class MealTestData {
     public static final Meal EXPECTED_MEAL_USER = new Meal(100006, LocalDateTime.of(2018, 5, 31, 10, 20),
             "User heavy lunch", 1700);
 
-    public static void assertMatchListInAnyOrder(List<Meal> firstMeal, List<Meal> secondMeal) {
-        assertThat(firstMeal).containsExactlyInAnyOrder(secondMeal.toArray(new Meal[secondMeal.size()]));
-    }
-
-
-    private static List<Meal> allUsersMeals = Arrays.asList(
+        private static List<Meal> allUsersMeals = Arrays.asList(
             new Meal(100002, LocalDateTime.of(2018, 5, 30, 9, 0), "User breakfast", 200),
             new Meal(100003, LocalDateTime.of(2018, 5, 30, 12, 0, 1), "User dinner", 700),
             new Meal(100004, LocalDateTime.of(2018, 5, 31, 19, 30), "User supper", 1500),
