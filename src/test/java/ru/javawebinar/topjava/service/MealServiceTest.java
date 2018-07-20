@@ -78,8 +78,9 @@ public class MealServiceTest {
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void updateNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
         service.update(MEAL1, ADMIN_ID);
     }
 
