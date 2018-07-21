@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.service;
 
 
+import org.junit.AfterClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -11,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.javawebinar.topjava.TestStopwatch;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -36,7 +39,10 @@ public class MealServiceTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-
+    @ClassRule
+    @Rule
+    public static TestStopwatch stopwatch = new TestStopwatch();
+    
 
     @Autowired
     private MealService service;
@@ -95,4 +101,9 @@ public class MealServiceTest {
                 LocalDate.of(2015, Month.MAY, 30),
                 LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL3, MEAL2, MEAL1);
     }
+    @AfterClass
+    public static void after() {
+        stopwatch.printTiming();
+    }
+    
 }
