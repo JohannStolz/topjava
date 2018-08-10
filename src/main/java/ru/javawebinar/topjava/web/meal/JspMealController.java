@@ -6,10 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDateTime;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
@@ -29,20 +28,12 @@ public class JspMealController extends AbstractMealController {
         this.mealService = mealService;
     }
 
-    @GetMapping
-    public String meals(Model model) {
-        log.debug("@GetMapping \"meals\"");
-        model.addAttribute("meals",
-                MealsUtil.getWithExceeded(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
-        return "meals";
-    }
-
-
     @GetMapping("/update/{id}")
     public String update(@PathVariable("id") int id, Model model) {
         log.debug(" @GetMapping(\"/update/{id}\"), userId={}, mealId={}", SecurityUtil.authUserId(), id);
         Meal meal = get(id);
         model.addAttribute("meal", meal);
+        model.addAttribute("update", SecurityUtil.authUserId());
         return "mealForm";
     }
 
@@ -52,7 +43,22 @@ public class JspMealController extends AbstractMealController {
         return "redirect:/meals";
     }
 
-    @PostMapping({"", "/filter"})
+    @PostMapping("/save")
+    public String save(@RequestParam(value = "dateTime") String dateTime
+            , @RequestParam(value = "description") String description
+            , @RequestParam(value = "calories") String calories
+            , Model model) {
+        log.debug("SaveMeal post request.");
+        Meal meal = new Meal(LocalDateTime.parse(dateTime), description, Integer.valueOf(calories));
+        if (model.containsAttribute("update")) {
+            mealService.update(meal, SecurityUtil.authUserId());
+        } else {
+            mealService.create(meal, SecurityUtil.authUserId());
+        }
+        return "redirect:/meals";
+    }
+
+    @PostMapping({"/filter"})
     public String filter(
             @RequestParam(value = "startDate") String startDate
             , @RequestParam(value = "endDate") String endDate
@@ -65,6 +71,7 @@ public class JspMealController extends AbstractMealController {
                 , parseLocalTime(startTime)
                 , parseLocalDate(endDate)
                 , parseLocalTime(endTime)));
+
         return "meals";
     }
 
