@@ -105,8 +105,10 @@ public class MealRestControllerTest extends AbstractControllerTest {
         List<MealWithExceed> mealWithExceeds = MealsUtil.getFilteredWithExceeded(meals, SecurityUtil.authUserCaloriesPerDay(), startDateTime.toLocalTime(), endDateTime.toLocalTime());
         mockMvc.perform(post(REST_URL + "between")
                 .contentType(MediaType.TEXT_HTML_VALUE)
-                .param("startDateTime", startDateTime.toString())
-                .param("endDateTime", endDateTime.toString()))
+                .param("startDate", startDateTime.toLocalDate().toString())
+                .param("startTime", startDateTime.toLocalTime().toString())
+                .param("endDate", endDateTime.toLocalDate().toString())
+                .param("endTime", endDateTime.toLocalTime().toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(writeValue(mealWithExceeds)));
