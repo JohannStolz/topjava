@@ -7,7 +7,8 @@
 
     <bean class="ru.javawebinar.topjava.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
-    <mvc:annotation-driven conversion-service="dateTimeFormatter">
+    <!--<mvc:annotation-driven conversion-service="dateTimeFormatter">-->
+    <mvc:annotation-driven conversion-service="dateTimeConverter">
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper" ref="objectMapper"/>
@@ -22,6 +23,7 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+
     <bean id="dateTimeFormatter" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="formatters">
             <set>
@@ -30,6 +32,19 @@
             </set>
         </property>
     </bean>
+
+    <bean id="dateTimeConverter"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="ru.javawebinar.topjava.web.util.LocalDateConverter"/>
+                <bean class="ru.javawebinar.topjava.web.util.LocalTimeConverter"/>
+            </set>
+        </property>
+    </bean>
+
+
+
     <context:component-scan base-package="ru.javawebinar.**.web"/>
 
     <!--  all resources inside folder src/main/webapp/resources are mapped so they can be referred to inside JSP files -->
