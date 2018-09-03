@@ -16,6 +16,10 @@ function clearFilter() {
 
 $(function () {
     datatableApi = $("#datatable").DataTable({
+        "ajax": {
+            "url": ajaxUrl,
+            "dataSrc": ""
+        },
         "paging": false,
         "info": true,
         "columns": [
@@ -30,11 +34,13 @@ $(function () {
             },
             {
                 "defaultContent": "Edit",
-                "orderable": false
-            },
+                "orderable": false,
+                "render": renderEditBtn
+                 },
             {
                 "defaultContent": "Delete",
-                "orderable": false
+                "orderable": false,
+                "render": renderDeleteBtn
             }
         ],
         "order": [
@@ -42,7 +48,14 @@ $(function () {
                 0,
                 "desc"
             ]
-        ]
+        ],
+        "createdRow": function (row, data, dataIndex) {
+            if (data.exceed){
+                $(row).addClass("exceeded");
+            }else{
+                $(row).addClass("normal");
+            }
+        },
+        "initComplete": makeEditable
     });
-    makeEditable();
 });
