@@ -59,11 +59,7 @@ $(function () {
             ]
         ],
         "createdRow": function (row, data, dataIndex) {
-            if (data.exceed){
-                $(row).addClass("exceeded");
-            }else{
-                $(row).addClass("normal");
-            }
+            $(row).attr("data-mealExceed", data.exceed);
         },
         "initComplete": makeEditable
     });
