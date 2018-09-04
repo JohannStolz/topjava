@@ -9,11 +9,9 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.ResponseEntityErrorHandler;
 import ru.javawebinar.topjava.util.UserUtil;
-import ru.javawebinar.topjava.web.meal.MealAjaxController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.StringJoiner;
 
 @RestController
 @RequestMapping("/ajax/admin/users")
@@ -38,29 +36,9 @@ public class AdminAjaxController extends AbstractUserController {
     }
 
     @PostMapping
-    /*public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result) {
-        if (result.hasErrors()) {
-            ResponseEntityErrorHandler.errorJoiner(result);
-        }
-        if (userTo.isNew()) {
-            super.create(UserUtil.createNewFromTo(userTo));
-        } else {
-            super.update(userTo, userTo.getId());
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }*/
     public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result) {
         if (result.hasErrors()) {
-            StringJoiner joiner = new StringJoiner("<br>");
-            result.getFieldErrors().forEach(
-                    fe -> {
-                        String msg = fe.getDefaultMessage();
-                        if (!msg.startsWith(fe.getField())) {
-                            msg = fe.getField() + ' ' + msg;
-                        }
-                        joiner.add(msg);
-                    });
-            return new ResponseEntity<>(joiner.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+            return ResponseEntityErrorHandler.errorJoiner(result);
         }
         if (userTo.isNew()) {
             super.create(UserUtil.createNewFromTo(userTo));
@@ -69,6 +47,7 @@ public class AdminAjaxController extends AbstractUserController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @Override
     @PostMapping("/{id}")
     public void enable(@PathVariable("id") int id, @RequestParam("enabled") boolean enabled) {
