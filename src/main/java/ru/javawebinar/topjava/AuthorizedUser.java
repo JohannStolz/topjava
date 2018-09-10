@@ -19,7 +19,7 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
     }
 
     public void update(UserTo newTo) {
-        userTo = newTo;
+            userTo = newTo;
     }
 
     public UserTo getUserTo() {
